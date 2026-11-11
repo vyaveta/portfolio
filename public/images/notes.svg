@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="paper" x1="18" y1="12" x2="106" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#f3f4f6"/>
+    </linearGradient>
+    <linearGradient id="header" x1="22" y1="13" x2="105" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe576"/>
+      <stop offset="1" stop-color="#ffbd2e"/>
+    </linearGradient>
+    <filter id="shadow" x="3" y="3" width="122" height="126" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <clipPath id="clip"><rect x="15" y="10" width="98" height="108" rx="22"/></clipPath>
+  </defs>
+  <rect x="14" y="17" width="100" height="101" rx="22" fill="#15223a" opacity=".24" filter="url(#shadow)"/>
+  <g clip-path="url(#clip)">
+    <rect x="15" y="10" width="98" height="108" rx="22" fill="url(#paper)"/>
+    <path d="M15 10h98v35H15z" fill="url(#header)"/>
+    <path d="M31 62h66M31 76h66M31 90h66M31 104h48" stroke="#bdc3cc" stroke-linecap="round" stroke-width="4"/>
+    <path d="M31 28h66" stroke="#fff4c2" stroke-linecap="round" stroke-width="3" opacity=".8"/>
+  </g>
+  <rect x="15.75" y="10.75" width="96.5" height="106.5" rx="21.25" stroke="#fff" stroke-opacity=".72" stroke-width="1.5"/>
+</svg>
