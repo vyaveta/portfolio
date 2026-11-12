@@ -33,37 +33,9 @@ export default function NotesWindow({ onClose, onMinimize, title, body, onTitleC
 
   const closeWindow = () => {
     const windowElement = windowRef.current;
-    const dockIcon = document.querySelector<HTMLElement>('[data-app-id="notes"]');
     if (!windowElement || closingRef.current || minimizingRef.current) return;
     closingRef.current = true;
-
-    if (!dockIcon) {
-      gsap.to(windowElement, { autoAlpha: 0, scale: 0.94, duration: 0.22, onComplete: onClose });
-      return;
-    }
-
-    const windowBounds = windowElement.getBoundingClientRect();
-    const iconBounds = dockIcon.getBoundingClientRect();
-    const x = Number(gsap.getProperty(windowElement, "x"));
-    const y = Number(gsap.getProperty(windowElement, "y"));
-    const targetX = x + iconBounds.left + iconBounds.width / 2 - (windowBounds.left + windowBounds.width / 2);
-    const targetY = y + iconBounds.top + iconBounds.height / 2 - (windowBounds.top + windowBounds.height / 2);
-
-    gsap.timeline({ onComplete: onClose })
-      .to(windowElement, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 72%, 55% 72%, 50% 100%, 45% 72%, 0% 72%)",
-        duration: 0.2,
-        ease: "power2.in",
-      })
-      .to(windowElement, {
-        x: targetX,
-        y: targetY,
-        scaleX: 0.06,
-        scaleY: 0.035,
-        autoAlpha: 0,
-        duration: 0.38,
-        ease: "power3.in",
-      });
+    onClose();
   };
 
   const minimizeWindow = () => {

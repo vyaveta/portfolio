@@ -55,7 +55,7 @@ export default function AppWindow({ app, minimized, maximized, onClose, onMinimi
       .to(element, { x: currentX + dx, y: currentY + dy, scaleX: 0.06, scaleY: 0.035, autoAlpha: 0, duration: 0.35, ease: "power3.in" });
   };
 
-  const close = () => animateToDock(onClose);
+  const close = () => onClose();
   const minimize = () => animateToDock(onMinimize);
 
   const startDrag = (event: PointerEvent<HTMLElement>) => {

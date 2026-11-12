@@ -371,6 +371,102 @@ body {
   .notification-widgets .battery-copy strong { @apply text-sm; }
   .notification-widgets .weather-stats span:nth-child(n+2) { display:none; }
 
+  .macos-menu-bar-shell { @apply fixed left-0 top-0 z-[100] h-8 w-full; pointer-events:none; }
+  .macos-menu-bar { @apply flex h-8 items-center justify-between px-2 text-[12px] text-white; pointer-events:auto; background:rgba(20,28,42,.13); text-shadow:0 1px 3px rgba(0,0,0,.38); -webkit-backdrop-filter:blur(12px) saturate(1.25); backdrop-filter:blur(12px) saturate(1.25); }
+  .macos-menu-left, .macos-menu-right { @apply flex h-full items-center gap-1; }
+  .macos-menu-left strong { @apply px-2 font-semibold; }
+  .macos-menu-button { @apply inline-flex h-6 items-center gap-1 rounded-md border-0 bg-transparent px-2 text-inherit transition-colors hover:bg-white/15; }
+  .macos-menu-button.active { @apply bg-white/20; }
+  .macos-menu-button.apple-mark { @apply px-2; }
+  .macos-menu-button.apple-mark img { @apply size-4 invert; }
+  .macos-menu-button.icon-only { @apply size-7 justify-center px-1; }
+  .macos-menu-button.date-button { @apply gap-2 px-2; }
+  .menubar-battery { @apply inline-flex items-center gap-1 px-1 text-white/90; }
+  .menubar-battery span { @apply text-[10px] tabular-nums; }
+  .mac-menu-popover { @apply absolute z-[110] rounded-xl border border-white/55 bg-white/80 p-1.5 text-gray-800 shadow-2xl backdrop-blur-3xl; pointer-events:auto; box-shadow:0 12px 40px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.8); }
+  .apple-menu { @apply left-2 top-8 w-64; }
+  .mac-menu-group { @apply m-0 list-none p-0; }
+  .mac-menu-item { @apply flex w-full items-center gap-2 rounded-md border-0 bg-transparent px-2.5 py-1 text-left text-[12px] leading-5 text-gray-800 transition-colors hover:bg-blue-500 hover:text-white disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-800; }
+  .mac-menu-item small { @apply ml-auto text-[10px] text-gray-500; }
+  .mac-menu-item:hover small { @apply text-white/85; }
+  .mac-menu-divider { @apply my-1 h-px bg-black/10; }
+  .wifi-menu { @apply right-20 top-8 w-64; }
+  .wifi-menu > header { @apply flex items-center gap-2 border-b border-black/10 px-2 pb-2; }
+  .wifi-menu > header > div:nth-child(2) { @apply flex min-w-0 flex-1 flex-col; }
+  .wifi-menu > header strong { @apply text-xs font-semibold; }
+  .wifi-menu > header small { @apply mt-0.5 text-[10px] text-gray-500; }
+  .wifi-menu > header button { @apply flex size-6 items-center justify-center rounded-full border-0 bg-black/5 text-gray-500; }
+  .menu-icon-tile { @apply flex size-8 items-center justify-center rounded-lg bg-blue-500 text-white; }
+  .wifi-toggle-row { @apply mt-2 flex w-full items-center gap-2 rounded-lg border-0 bg-transparent px-2 py-2 text-left text-xs hover:bg-black/5; }
+  .wifi-toggle-row.enabled { @apply text-blue-600; }
+  .wifi-toggle-row i { @apply ml-auto h-4 w-7 rounded-full bg-gray-300; }
+  .wifi-toggle-row.enabled i { @apply bg-blue-500; }
+  .wifi-menu > p { @apply px-2 pb-1 pt-1 text-[10px] text-gray-500; }
+  .control-center-menu { @apply right-2 top-8 w-[328px]; }
+  .control-center-menu > header { @apply mb-2 flex items-center justify-between px-1; }
+  .control-center-menu > header strong { @apply text-xs font-semibold; }
+  .control-center-menu > header button { @apply flex size-6 items-center justify-center rounded-full border-0 bg-black/5 text-gray-600; }
+  .cc-connectivity-grid { @apply grid grid-cols-2 gap-2; }
+  .cc-toggle-tile { @apply grid grid-cols-[34px_1fr] grid-rows-2 items-center gap-x-2 rounded-xl border-0 bg-gray-200/70 p-2 text-left text-gray-700; }
+  .cc-toggle-tile > span { @apply row-span-2 flex size-8 items-center justify-center rounded-full bg-white/80; }
+  .cc-toggle-tile strong { @apply text-[11px] font-semibold; }
+  .cc-toggle-tile small { @apply text-[9px] text-gray-500; }
+  .cc-toggle-tile.active > span { @apply bg-blue-500 text-white; }
+  .cc-slider-card { @apply mt-2 flex w-full flex-col gap-2 rounded-xl border-0 bg-gray-200/70 p-3 text-left text-[11px] text-gray-700; }
+  .cc-slider-card > span { @apply flex items-center gap-2 font-medium; }
+  .cc-slider-card input { @apply w-full accent-blue-500; }
+  .cc-notifications-button { @apply mt-2 w-full rounded-lg border-0 bg-gray-200/70 px-3 py-2 text-xs text-gray-700 hover:bg-gray-300/70; }
+  .desktop-context-menu { @apply z-[120] w-60; }
+  .desktop-context-menu > div { @apply w-full; }
+
+  .macos-menu-bar-shell { @apply fixed left-0 top-0 z-[100] h-8 w-full; pointer-events:none; }
+  .macos-menu-bar { @apply flex h-8 items-center justify-between px-2 text-[12px] text-white; pointer-events:auto; background:rgba(20,28,42,.13); text-shadow:0 1px 3px rgba(0,0,0,.38); -webkit-backdrop-filter:blur(12px) saturate(1.25); backdrop-filter:blur(12px) saturate(1.25); }
+  .macos-menu-left, .macos-menu-right { @apply flex h-full items-center gap-1; }
+  .macos-menu-left strong { @apply px-2 font-semibold; }
+  .macos-menu-button { @apply inline-flex h-6 items-center gap-1 rounded-md border-0 bg-transparent px-2 text-inherit transition-colors hover:bg-white/15; }
+  .macos-menu-button.active { @apply bg-white/20; }
+  .macos-menu-button.apple-mark { @apply px-2; }
+  .macos-menu-button.apple-mark img { @apply size-4 invert; }
+  .macos-menu-button.icon-only { @apply size-7 justify-center px-1; }
+  .macos-menu-button.date-button { @apply gap-2 px-2; }
+  .menubar-battery { @apply inline-flex items-center gap-1 px-1 text-white/90; }
+  .menubar-battery span { @apply text-[10px] tabular-nums; }
+  .mac-menu-popover { @apply absolute z-[110] rounded-xl border border-white/55 bg-white/80 p-1.5 text-gray-800 shadow-2xl backdrop-blur-3xl; pointer-events:auto; box-shadow:0 12px 40px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.8); }
+  .apple-menu { @apply left-2 top-8 w-64; }
+  .mac-menu-group { @apply m-0 list-none p-0; }
+  .mac-menu-item { @apply flex w-full items-center gap-2 rounded-md border-0 bg-transparent px-2.5 py-1 text-left text-[12px] leading-5 text-gray-800 transition-colors hover:bg-blue-500 hover:text-white disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gray-800; }
+  .mac-menu-item small { @apply ml-auto text-[10px] text-gray-500 group-hover:text-white; }
+  .mac-menu-item:hover small { @apply text-white/85; }
+  .mac-menu-divider { @apply my-1 h-px bg-black/10; }
+  .wifi-menu { @apply right-20 top-8 w-64; }
+  .wifi-menu > header { @apply flex items-center gap-2 border-b border-black/10 px-2 pb-2; }
+  .wifi-menu > header > div:nth-child(2) { @apply flex min-w-0 flex-1 flex-col; }
+  .wifi-menu > header strong { @apply text-xs font-semibold; }
+  .wifi-menu > header small { @apply mt-0.5 text-[10px] text-gray-500; }
+  .wifi-menu > header button { @apply flex size-6 items-center justify-center rounded-full border-0 bg-black/5 text-gray-500; }
+  .menu-icon-tile { @apply flex size-8 items-center justify-center rounded-lg bg-blue-500 text-white; }
+  .wifi-toggle-row { @apply mt-2 flex w-full items-center gap-2 rounded-lg border-0 bg-transparent px-2 py-2 text-left text-xs hover:bg-black/5; }
+  .wifi-toggle-row.enabled { @apply text-blue-600; }
+  .wifi-toggle-row i { @apply ml-auto h-4 w-7 rounded-full bg-gray-300; }
+  .wifi-toggle-row.enabled i { @apply bg-blue-500; }
+  .wifi-menu > p { @apply px-2 pb-1 pt-1 text-[10px] text-gray-500; }
+  .control-center-menu { @apply right-2 top-8 w-[328px]; }
+  .control-center-menu > header { @apply mb-2 flex items-center justify-between px-1; }
+  .control-center-menu > header strong { @apply text-xs font-semibold; }
+  .control-center-menu > header button { @apply flex size-6 items-center justify-center rounded-full border-0 bg-black/5 text-gray-600; }
+  .cc-connectivity-grid { @apply grid grid-cols-2 gap-2; }
+  .cc-toggle-tile { @apply grid grid-cols-[34px_1fr] grid-rows-2 items-center gap-x-2 rounded-xl border-0 bg-gray-200/70 p-2 text-left text-gray-700; }
+  .cc-toggle-tile > span { @apply row-span-2 flex size-8 items-center justify-center rounded-full bg-white/80; }
+  .cc-toggle-tile strong { @apply text-[11px] font-semibold; }
+  .cc-toggle-tile small { @apply text-[9px] text-gray-500; }
+  .cc-toggle-tile.active > span { @apply bg-blue-500 text-white; }
+  .cc-slider-card { @apply mt-2 flex w-full flex-col gap-2 rounded-xl border-0 bg-gray-200/70 p-3 text-left text-[11px] text-gray-700; }
+  .cc-slider-card > span { @apply flex items-center gap-2 font-medium; }
+  .cc-slider-card input { @apply w-full accent-blue-500; }
+  .cc-notifications-button { @apply mt-2 w-full rounded-lg border-0 bg-gray-200/70 px-3 py-2 text-xs text-gray-700 hover:bg-gray-300/70; }
+  .desktop-context-menu { @apply z-[120] w-60; }
+  .desktop-context-menu > div { @apply w-full; }
+
   @keyframes os-boot-appear { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: scale(1); } }
   @keyframes os-soft-pulse { 0%,100% { opacity: .45; } 50% { opacity: .9; } }
   @keyframes os-login-enter { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -378,6 +474,8 @@ body {
 
   @media (max-width: 700px) {
     #menubar, .os-desktop-widgets, .os-desktop-icons, .os-control-center-trigger { display: none; }
+    .macos-menu-bar-shell { display:none; }
+    .macos-menu-bar-shell { display:none; }
     #dock { display: none; }
     .notes-window { top: 0; left: 0; width: 100vw; height: 100dvh; translate: 0 0; border-radius: 0; }
     .notes-sidebar { @apply w-32 p-2; }

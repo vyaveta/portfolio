@@ -2,7 +2,6 @@
 
 import { useEffect, useState, type TouchEvent } from "react";
 import { Apple, BatteryFull, Bluetooth, Volume2, Wifi, X } from "lucide-react";
-import Navbar from "@/components/navbar";
 import Dock from "@/components/dock";
 import NotesWindow from "@/components/notes-window";
 import AboutThisMacModal from "@/components/about-this-mac-modal";
@@ -14,6 +13,8 @@ import NotificationCenter, { type DesktopNotification } from "@/components/notif
 import Spotlight from "@/components/spotlight";
 import DesktopWidgets from "@/components/widgets/desktop-widgets";
 import BatteryWidget from "@/components/widgets/battery-widget";
+import TopBar from "@/components/menus/TopBar";
+import ContextMenu from "@/components/menus/ContextMenu";
 
 type Screen = "boot" | "login" | "desktop";
 type AppInfo = WindowApp;
@@ -26,6 +27,8 @@ const apps: AppInfo[] = [
   { id: "terminal", name: "Skills", icon: "/img/icons/terminal.png" },
   { id: "notes", name: "Notes", icon: "/img/icons/notes.png" },
   { id: "resume", name: "Resume", icon: "/img/icons/sf-icons/pdf.svg" },
+  { id: "system-settings", name: "System Settings", icon: "/img/icons/settings.png" },
+  { id: "app-store", name: "App Store", icon: "/img/icons/app-store.png" },
 ];
 
 function useClock() {
@@ -195,6 +198,10 @@ export default function OsExperience() {
   const [windowMaximized, setWindowMaximized] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [wifiEnabled, setWifiEnabled] = useState(true);
+  const [bluetoothEnabled, setBluetoothEnabled] = useState(true);
+  const [airdropEnabled, setAirdropEnabled] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ show: boolean; x: number; y: number }>({ show: false, x: 0, y: 0 });
   const [notifications, setNotifications] = useState<DesktopNotification[]>([]);
   const [noteTitle, setNoteTitle] = useState("Welcome to Notes");
   const [noteBody, setNoteBody] = useState("A quiet place for ideas, plans, and everything you want to remember.");
@@ -263,6 +270,7 @@ export default function OsExperience() {
     setSpotlight(false);
     setLaunchpad(false);
     setPanel(null);
+    setContextMenu((current) => ({ ...current, show: false }));
     if (!focusMode) {
       const notification = { id: `${Date.now()}-${app.id}`, title: app.name, message: `${app.name} opened`, icon: app.icon, createdAt: Date.now() };
       setNotifications((current) => [notification, ...current].slice(0, 6));
@@ -274,7 +282,7 @@ export default function OsExperience() {
   if (screen === "login") return <LoginScreen onLogin={() => setScreen("desktop")} onPower={power} />;
 
   return (
-    <div className="os-desktop-shell" onContextMenu={(event) => { event.preventDefault(); setPanel("control"); }}>
+    <div className="os-desktop-shell" onContextMenu={(event) => { if (isMobile) return; event.preventDefault(); setContextMenu({ show: true, x: event.clientX, y: event.clientY }); }}>
       <div className="os-wallpaper" style={{ filter: `brightness(${brightness}%)` }} />
       {isMobile ? (
         <>
@@ -289,7 +297,18 @@ export default function OsExperience() {
         </>
       ) : (
         <>
-          <Navbar onOpenSpotlight={() => setSpotlight(true)} onOpenLaunchpad={() => setLaunchpad(true)} onOpenAbout={() => setShowAbout(true)} onOpenApp={(id) => { const app = apps.find((item) => item.id === id); if (app) openApp(app); }} onOpenNotifications={() => setPanel("notifications")} onOpenControlCenter={() => setPanel("control")} onPower={power} />
+          <TopBar
+            title={activeApp?.name ?? "Adwaith’s Portfolio"}
+            brightness={brightness} setBrightness={setBrightness}
+            volume={volume} setVolume={setVolume}
+            wifiEnabled={wifiEnabled} toggleWifi={() => setWifiEnabled((value) => !value)}
+            bluetoothEnabled={bluetoothEnabled} toggleBluetooth={() => setBluetoothEnabled((value) => !value)}
+            airdropEnabled={airdropEnabled} toggleAirdrop={() => setAirdropEnabled((value) => !value)}
+            focusMode={focusMode} toggleFocus={() => setFocusMode((value) => !value)}
+            onOpenSpotlight={() => setSpotlight(true)} onOpenNotifications={() => setPanel("notifications")}
+            onOpenAbout={() => setShowAbout(true)} onOpenApp={(id) => { const app = apps.find((item) => item.id === id); if (app) openApp(app); }}
+            onPower={power} onLock={() => { setActiveApp(null); setScreen("login"); }} onForceQuit={() => setActiveApp(null)}
+          />
           <DesktopWidgets />
           <DesktopIcons apps={[...apps.slice(0, 4), apps[5], apps[6]]} onOpen={(id) => { const app = apps.find((item) => item.id === id); if (app) openApp(app); }} />
           <DynamicIsland currentApp={activeApp?.name} />
@@ -299,11 +318,11 @@ export default function OsExperience() {
             <AppWindow app={activeApp} minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ))}
           <Dock onLaunch={(id) => { const app = apps.find((item) => item.id === id); if (app && id !== "notes") { if (activeApp?.id === id && windowMinimized) setWindowMinimized(false); else openApp(app); } }} />
-          {panel === "control" && <ControlCenter onClose={() => setPanel(null)} brightness={brightness} setBrightness={setBrightness} volume={volume} setVolume={setVolume} />}
           {panel === "notifications" && <NotificationCenter show notifications={notifications} focusMode={focusMode} onClose={() => setPanel(null)} onClear={() => setNotifications([])} onToggleFocus={() => setFocusMode((value) => !value)} />}
           <AboutThisMacModal show={showAbout} onClose={() => setShowAbout(false)} />
           <Spotlight show={spotlight} apps={apps} onClose={() => setSpotlight(false)} onOpen={openApp} />
           {launchpad && <Launchpad apps={apps} onClose={() => setLaunchpad(false)} onOpen={(app) => { setLaunchpad(false); openApp(app); }} />}
+          <ContextMenu x={contextMenu.x} y={contextMenu.y} show={contextMenu.show} onClose={() => setContextMenu((current) => ({ ...current, show: false }))} onOpenApp={(id) => { const app = apps.find((item) => item.id === id); if (app) openApp(app); }} />
         </>
       )}
     </div>
