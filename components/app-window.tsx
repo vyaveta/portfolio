@@ -19,10 +19,12 @@ type AppWindowProps = {
 
 type Geometry = { left: number | null; top: number | null; width: number; height: number };
 
+type ResizeDirection = "n" | "s" | "e" | "w" | "nw" | "ne" | "sw" | "se";
+
 export default function AppWindow({ app, minimized, maximized, onClose, onMinimize, onToggleMaximize }: AppWindowProps) {
   const windowRef = useRef<HTMLElement>(null);
   const dragRef = useRef<{ pointerId: number; x: number; y: number; left: number; top: number } | null>(null);
-  const resizeRef = useRef<{ pointerId: number; x: number; y: number; width: number; height: number } | null>(null);
+  const resizeRef = useRef<{ pointerId: number; x: number; y: number; width: number; height: number; direction: ResizeDirection } | null>(null);
   const wasMinimizedRef = useRef(false);
   const [geometry, setGeometry] = useState<Geometry>({ left: null, top: null, width: 720, height: 480 });
 
@@ -59,7 +61,7 @@ export default function AppWindow({ app, minimized, maximized, onClose, onMinimi
   const minimize = () => animateToDock(onMinimize);
 
   const startDrag = (event: PointerEvent<HTMLElement>) => {
-    if (maximized || (event.target as HTMLElement).closest("button")) return;
+    if (maximized || (event.target as HTMLElement).closest("button, .resize-handle")) return;
     const element = windowRef.current;
     if (!element) return;
     const bounds = element.getBoundingClientRect();
@@ -77,18 +79,61 @@ export default function AppWindow({ app, minimized, maximized, onClose, onMinimi
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
-  const startResize = (event: PointerEvent<HTMLButtonElement>) => {
+  const startResize = (event: React.PointerEvent<HTMLDivElement>, direction: ResizeDirection) => {
     if (maximized) return;
     event.stopPropagation();
     event.currentTarget.setPointerCapture(event.pointerId);
-    resizeRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, width: geometry.width, height: geometry.height };
+    const element = windowRef.current;
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    resizeRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, width: rect.width, height: rect.height, direction };
   };
-  const moveResize = (event: PointerEvent<HTMLButtonElement>) => {
+  const moveResize = (event: PointerEvent<HTMLDivElement>) => {
     const resize = resizeRef.current;
     if (!resize || resize.pointerId !== event.pointerId) return;
-    setGeometry((current) => ({ ...current, width: Math.max(360, resize.width + event.clientX - resize.x), height: Math.max(260, resize.height + event.clientY - resize.y) }));
+
+    const deltaX = event.clientX - resize.x;
+    const deltaY = event.clientY - resize.y;
+
+    setGeometry((current) => {
+      let newWidth = current.width;
+      let newHeight = current.height;
+      let newLeft = current.left;
+      let newTop = current.top;
+
+      const minWidth = 360;
+      const minHeight = 260;
+
+      // Handle horizontal resizing
+      if (resize.direction.includes("e")) {
+        newWidth = Math.max(minWidth, resize.width + deltaX);
+      }
+      if (resize.direction.includes("w")) {
+        const proposedWidth = Math.max(minWidth, resize.width - deltaX);
+        const widthDiff = current.width - proposedWidth;
+        newWidth = proposedWidth;
+        if (current.left !== null) {
+          newLeft = current.left + widthDiff;
+        }
+      }
+
+      // Handle vertical resizing
+      if (resize.direction.includes("s")) {
+        newHeight = Math.max(minHeight, resize.height + deltaY);
+      }
+      if (resize.direction.includes("n")) {
+        const proposedHeight = Math.max(minHeight, resize.height - deltaY);
+        const heightDiff = current.height - proposedHeight;
+        newHeight = proposedHeight;
+        if (current.top !== null) {
+          newTop = current.top + heightDiff;
+        }
+      }
+
+      return { ...current, width: newWidth, height: newHeight, left: newLeft, top: newTop };
+    });
   };
-  const endResize = (event: PointerEvent<HTMLButtonElement>) => {
+  const endResize = (event: PointerEvent<HTMLDivElement>) => {
     if (resizeRef.current?.pointerId !== event.pointerId) return;
     resizeRef.current = null;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
@@ -96,11 +141,17 @@ export default function AppWindow({ app, minimized, maximized, onClose, onMinimi
 
   const style = maximized
     ? undefined
-    : { width: `min(${geometry.width}px, calc(100vw - 2rem))`, height: `min(${geometry.height}px, calc(100dvh - 7rem))`, left: geometry.left === null ? "50%" : `${geometry.left}px`, top: geometry.top === null ? "50%" : `${geometry.top}px`, transform: geometry.left === null ? "translate(-50%, -50%)" : "none" };
+    : {
+        width: `min(${geometry.width}px, calc(100vw - 2rem))`,
+        height: `min(${geometry.height}px, calc(100dvh - 7rem))`,
+        left: geometry.left === null ? "50%" : `${geometry.left}px`,
+        top: geometry.top === null ? "50%" : `${geometry.top}px`,
+        transform: geometry.left === null ? "translate(-50%, -50%)" : "none",
+      };
 
   return (
     <section ref={windowRef} className={`app-window${maximized ? " is-maximized" : ""}${minimized ? " is-minimized" : ""}`} style={style} aria-label={`${app.name} window`}>
-      <header className="app-window-titlebar" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onDoubleClick={(event) => { if (!(event.target as HTMLElement).closest("button")) onToggleMaximize(); }}>
+      <header className="app-window-titlebar" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag} onDoubleClick={(event) => { if (!(event.target as HTMLElement).closest("button, .resize-handle")) onToggleMaximize(); }}>
         <div className="app-window-controls">
           <button className="red" onClick={close} aria-label="Close" title="Close"><X size={8} /></button>
           <button className="yellow" onClick={minimize} aria-label="Minimize" title="Minimize"><Minimize2 size={8} /></button>
@@ -115,7 +166,20 @@ export default function AppWindow({ app, minimized, maximized, onClose, onMinimi
         <p>This window is part of Adwaith&apos;s interactive portfolio desktop.</p>
         {app.id === "resume" && <a href="/files/resume.pdf" target="_blank" rel="noreferrer">Open resume PDF</a>}
       </div>
-      {!maximized && <button className="app-window-resize" aria-label="Resize window" onPointerDown={startResize} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} />}
+      {!maximized && (
+        <>
+          {/* Corner resize handles */}
+          <div className="resize-handle nw" onPointerDown={(e) => startResize(e, "nw")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize northwest" />
+          <div className="resize-handle ne" onPointerDown={(e) => startResize(e, "ne")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize northeast" />
+          <div className="resize-handle sw" onPointerDown={(e) => startResize(e, "sw")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize southwest" />
+          <div className="resize-handle se" onPointerDown={(e) => startResize(e, "se")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize southeast" />
+          {/* Edge resize handles */}
+          <div className="resize-handle n" onPointerDown={(e) => startResize(e, "n")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize north" />
+          <div className="resize-handle s" onPointerDown={(e) => startResize(e, "s")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize south" />
+          <div className="resize-handle e" onPointerDown={(e) => startResize(e, "e")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize east" />
+          <div className="resize-handle w" onPointerDown={(e) => startResize(e, "w")} onPointerMove={moveResize} onPointerUp={endResize} onPointerCancel={endResize} aria-label="Resize west" />
+        </>
+      )}
     </section>
   );
 }

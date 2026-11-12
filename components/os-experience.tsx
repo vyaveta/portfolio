@@ -1,11 +1,30 @@
 "use client";
 
 import { useEffect, useState, type TouchEvent } from "react";
-import { Apple, BatteryFull, Bluetooth, Volume2, Wifi, X } from "lucide-react";
+import { BatteryFull, Bluetooth, Volume2, Wifi, X } from "lucide-react";
+
+function AppleLogo({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      fill="currentColor"
+      aria-hidden="true"
+      className={className}
+      {...props}
+    >
+      <path d="M16 2C8.3 2 2 8.3 2 16c0 7.7 6.3 14 14 14 7.7 0 14-6.3 14-14C30 8.3 23.7 2 16 2zm0 26C10.5 28 6 23.5 6 18S10.5 8 16 8s10 4.5 10 10-4.5 10-10 10zm5.5-16c0-1.7-.7-3.2-1.8-4.3-1.3-1.4-3.1-2.2-5.2-2.2-2.1 0-3.9.8-5.2 2.2-1.1 1.1-1.8 2.6-1.8 4.3 0 1.7.7 3.2 1.8 4.3 1.3 1.4 3.1 2.2 5.2 2.2 2.1 0 3.9-.8 5.2-2.2 1.1-1.1 1.8-2.6 1.8-4.3z" />
+      <path d="M16 6c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
 import Dock from "@/components/dock";
-import NotesWindow from "@/components/notes-window";
+import NotesWindow from "@/components/apps/Notes";
+import Finder from "@/components/apps/Finder";
+import SpotifyWindow from "@/components/apps/Spotify";
+import SafariWindow from "@/components/apps/Safari";
 import AboutThisMacModal from "@/components/about-this-mac-modal";
 import AppWindow, { type WindowApp } from "@/components/app-window";
+import TerminalWindow from "@/components/terminal-window";
 import DesktopIcons from "@/components/desktop-icons";
 import DynamicIsland from "@/components/dynamic-island";
 import Launchpad from "@/components/launchpad";
@@ -25,6 +44,7 @@ const apps: AppInfo[] = [
   { id: "photos", name: "Gallery", icon: "/img/icons/photos.png" },
   { id: "contact", name: "Contact", icon: "/images/contact.png" },
   { id: "terminal", name: "Skills", icon: "/img/icons/terminal.png" },
+  { id: "spotify", name: "Spotify", icon: "/img/icons/spotify.png" },
   { id: "notes", name: "Notes", icon: "/img/icons/notes.png" },
   { id: "resume", name: "Resume", icon: "/img/icons/sf-icons/pdf.svg" },
   { id: "system-settings", name: "System Settings", icon: "/img/icons/settings.png" },
@@ -55,7 +75,7 @@ function BootScreen({
 }) {
   return (
     <button className="os-boot-screen" onClick={onStart} disabled={busy} aria-label={shutdown ? "Power on this Mac" : wakeOnly ? "Wake this Mac" : "Start this Mac"}>
-      <Apple className="os-boot-apple" strokeWidth={1.4} />
+      <AppleLogo className="os-boot-apple" width={48} height={48} />
       {busy ? (
         <div className="os-boot-progress" aria-label={`Starting up ${Math.round(progress)} percent`}>
           <span style={{ width: `${progress}%` }} />
@@ -288,7 +308,7 @@ export default function OsExperience() {
         <>
           {!activeApp && <MobileHome openApp={openApp} openControl={() => setPanel("control")} openNotifications={() => setPanel("notifications")} brightness={brightness} setBrightness={setBrightness} volume={volume} setVolume={setVolume} />}
           {activeApp && (activeApp.id === "notes" ? (
-            <NotesWindow onClose={() => setActiveApp(null)} onMinimize={() => setActiveApp(null)} title={noteTitle} body={noteBody} onTitleChange={setNoteTitle} onBodyChange={setNoteBody} />
+            <NotesWindow minimized={false} maximized={true} onClose={() => setActiveApp(null)} onMinimize={() => setActiveApp(null)} onToggleMaximize={() => {}} />
           ) : (
             <section className="os-mobile-app"><header><button onClick={() => setActiveApp(null)}>‹ Home</button><strong>{activeApp.name}</strong><span /></header><img src={activeApp.icon} alt="" /><h1>{activeApp.name}</h1><p>Explore {activeApp.name.toLowerCase()} in Adwaith’s portfolio.</p><button className="os-glass-button" onClick={() => setActiveApp(null)}>Done</button><div className="os-mobile-home-indicator" /></section>
           ))}
@@ -311,9 +331,17 @@ export default function OsExperience() {
           />
           <DesktopWidgets />
           <DesktopIcons apps={[...apps.slice(0, 4), apps[5], apps[6]]} onOpen={(id) => { const app = apps.find((item) => item.id === id); if (app) openApp(app); }} />
-          <DynamicIsland currentApp={activeApp?.name} />
-          {activeApp && (activeApp.id === "notes" ? (
-            <NotesWindow onClose={() => setActiveApp(null)} onMinimize={() => setActiveApp(null)} title={noteTitle} body={noteBody} onTitleChange={setNoteTitle} onBodyChange={setNoteBody} />
+          {/* <DynamicIsland currentApp={activeApp?.name} /> */}
+          {activeApp && (activeApp.id === "finder" ? (
+            <Finder minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
+          ) : activeApp.id === "spotify" ? (
+            <SpotifyWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
+          ) : activeApp.id === "safari" ? (
+            <SafariWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
+          ) : activeApp.id === "notes" ? (
+            <NotesWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
+          ) : activeApp.id === "terminal" ? (
+            <TerminalWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ) : (
             <AppWindow app={activeApp} minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ))}

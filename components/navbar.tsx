@@ -24,7 +24,7 @@ const Navbar = ({ onOpenSpotlight, onOpenNotifications, onOpenControlCenter, onO
   }, []);
   const list = [
     { name: "Projects", action: onOpenLaunchpad },
-    { name: "Portfolio", app: "finder" },
+    { name: "Finder", app: "finder" },
     { name: "Contact", app: "contact" },
     { name: "Github", app: "safari" },
   ];

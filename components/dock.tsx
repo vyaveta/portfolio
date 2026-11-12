@@ -19,6 +19,7 @@ const dockAssetPaths: Record<string, string> = {
   contact: "/images/contact.png",
   terminal: "/img/icons/terminal.png",
   notes: "/img/icons/notes.png",
+  spotify: "/img/icons/spotify.png",
   trash: "/images/trash.png",
 };
 
@@ -52,8 +53,13 @@ export default function Dock({ onLaunch }: DockProps) {
           stagger: 0.055,
           ease: "back.out(1.8)",
           delay: 0.3,
+          onComplete: () => gsap.set(icons, { clearProps: "opacity,visibility" }),
         },
       );
+    } else {
+      // Ensure icons are visible when reduced motion is enabled
+      gsap.set(icons, { autoAlpha: 1, scale: 1, y: 0 });
+      gsap.set(dock, { autoAlpha: 1, y: 0 });
     }
 
     const magnify = (event: PointerEvent) => {

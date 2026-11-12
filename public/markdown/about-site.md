@@ -1,5 +1,5 @@
 # About This Site
 
-This site is inspired by macOS [Big Sur](https://www.apple.com/in/macos/big-sur/) and [Catalina](https://www.apple.com/bw/macos/catalina/), developed using [React](https://reactjs.org/), [Zustand](https://zustand-demo.pmnd.rs/) and [UnoCSS](https://uno.antfu.me/), and hosted on [Github Pages](https://pages.github.com/). Some of the icons are generated using [sindresorhus/file-icon-cli](https://github.com/sindresorhus/file-icon-cli).
+This site is a macOS-style portfolio inspired by macOS Tahoe, developed using [Next.js 15](https://nextjs.org/), [React 19](https://react.dev/), [GSAP](https://gsap.com/), [Tailwind CSS v4](https://tailwindcss.com/), and [Framer Motion](https://www.framer.com/motion/).
 
-The source code is hosted [here](https://github.com/aakashsharma003/macOS-Portfolio).
+The source code is hosted [here](https://github.com/adwaith/macos-portfolio).
