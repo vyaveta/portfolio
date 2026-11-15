@@ -46,7 +46,8 @@ export default function TopBar(props: TopBarProps) {
       <header className="macos-menu-bar">
         <div className="macos-menu-left">
           <button className={`macos-menu-button apple-mark${menu === "apple" ? " active" : ""}`} onClick={() => toggleMenu("apple")} aria-label="Apple menu" aria-expanded={menu === "apple"}>
-            <img src="/img/icons/sf-icons/general.svg" alt="" />
+            {/* <img src="/img/icons/sf-icons/general.svg" alt="" /> */}
+            <div className="icon-[fa6-brands--apple] text-white size-4 sm:size-4" />
           </button>
           <strong>{props.title}</strong>
           <button className="macos-menu-button">File</button>

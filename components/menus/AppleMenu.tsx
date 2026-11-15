@@ -17,11 +17,19 @@ export default function AppleMenu({ onClose, onAbout, onOpenApp, onPower, onLock
   return (
     <MenuPopover className="apple-menu">
       <MenuItemGroup>
-        <MenuItem onClick={() => run(onAbout)}><Info size={14} />About This Mac</MenuItem>
+        <MenuItem onClick={() => run(onAbout)}>
+          <div className="flex items-center gap-2">
+            <Info size={14} />About This Mac
+          </div>
+        </MenuItem>
       </MenuItemGroup>
       <MenuDivider />
       <MenuItemGroup>
-        <MenuItem onClick={() => run(() => onOpenApp("system-settings"))}><Settings size={14} />System Settings…</MenuItem>
+        <MenuItem onClick={() => run(() => onOpenApp("system-settings"))}>
+          <div className="flex items-center gap-2">
+            <Settings size={14} />System Settings
+          </div>
+        </MenuItem>
         <MenuItem onClick={() => run(() => onOpenApp("app-store"))}>App Store…</MenuItem>
         <MenuItem disabled>Recent Items <span aria-hidden="true">›</span></MenuItem>
       </MenuItemGroup>
@@ -31,14 +39,34 @@ export default function AppleMenu({ onClose, onAbout, onOpenApp, onPower, onLock
       </MenuItemGroup>
       <MenuDivider />
       <MenuItemGroup>
-        <MenuItem onClick={() => run(() => onPower("sleep"))}><Moon size={14} />Sleep</MenuItem>
-        <MenuItem onClick={() => run(() => onPower("restart"))}><RotateCw size={14} />Restart…</MenuItem>
-        <MenuItem onClick={() => run(() => onPower("shutdown"))}><Power size={14} />Shut Down…</MenuItem>
+        <MenuItem onClick={() => run(() => onPower("sleep"))}>
+          <div className="flex items-center gap-2">
+            <Moon size={14} />Sleep
+          </div>
+        </MenuItem>
+        <MenuItem onClick={() => run(() => onPower("restart"))}>
+          <div className="flex items-center gap-2">
+            <RotateCw size={14} />Restart
+          </div>
+        </MenuItem>
+        <MenuItem onClick={() => run(() => onPower("shutdown"))}>
+          <div className="flex items-center gap-2">
+            <Power size={14} />Shut Down
+          </div>
+        </MenuItem>
       </MenuItemGroup>
       <MenuDivider />
       <MenuItemGroup>
-        <MenuItem onClick={() => run(onLock)} shortcut="⌃⌘Q"><LockKeyhole size={14} />Lock Screen</MenuItem>
-        <MenuItem onClick={() => run(onLock)} shortcut="⇧⌘Q"><LogOut size={14} />Log Out Adwaith…</MenuItem>
+        <MenuItem onClick={() => run(onLock)} shortcut="⌃⌘Q">
+          <div className="flex items-center gap-2">
+            <LockKeyhole size={14} />Lock Screen
+          </div>
+        </MenuItem>
+        <MenuItem onClick={() => run(onLock)} shortcut="⇧⌘Q">
+          <div className="flex items-center gap-2">
+            <LogOut size={14} />Log Out Adwaith
+          </div>
+        </MenuItem>
       </MenuItemGroup>
     </MenuPopover>
   );

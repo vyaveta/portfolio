@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
-
 @import "tailwindcss";
+@plugin "@iconify/tailwind4";
+@import "tailwindcss/theme.css";
 
 html,
 body {
@@ -37,7 +38,9 @@ body {
   }
 
   #menubar {
-    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
+    @apply flex justify-between items-center p-2 px-5 select-none;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(64px);
 
     div {
       @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
@@ -101,17 +104,17 @@ body {
   .os-login-clock p { @apply mt-2 text-lg font-medium text-white/90 sm:text-xl; }
 
   .os-login-user { @apply absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center; animation: os-login-enter 450ms cubic-bezier(.2,.8,.2,1) both; }
-  .os-avatar { @apply flex size-20 items-center justify-center rounded-full border border-white/50 bg-white/20 text-4xl font-light shadow-xl backdrop-blur-xl; }
+  .os-avatar { @apply flex size-20 items-center justify-center rounded-full border border-white/50 bg-white/20 text-4xl font-light shadow-xl; backdrop-filter: blur(24px); }
   .os-login-user h1 { @apply mt-3 text-lg font-medium text-shadow-sm; }
   .os-login-user > p { @apply mt-3 text-xs text-white/60; }
   .os-login-keyboard { @apply absolute left-1/2 top-[calc(100%+1rem)] h-px w-px opacity-0; }
-  .os-glass-button { @apply mt-4 rounded-full border border-white/40 bg-white/20 px-5 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-xl transition hover:bg-white/30; }
+  .os-glass-button { @apply mt-4 rounded-full border border-white/40 bg-white/20 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-white/30; backdrop-filter: blur(24px); }
   .os-glass-button span { @apply ml-2 text-white/70; }
   .os-unlock-hint { @apply absolute bottom-24 rounded-full border-0 bg-transparent px-5 py-2 text-sm text-white/70 drop-shadow-md; animation: os-soft-pulse 3s ease-in-out infinite; }
 
   .os-power-actions { @apply flex items-end gap-5 sm:gap-8; }
   .os-power-actions button { @apply flex w-20 flex-col items-center gap-2 border-0 bg-transparent text-xs text-white/75 transition hover:text-white; }
-  .os-power-actions button span { @apply flex size-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xl backdrop-blur-xl transition hover:scale-105 hover:bg-white/20; }
+  .os-power-actions button span { @apply flex size-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xl transition hover:scale-105 hover:bg-white/20; backdrop-filter: blur(24px); }
 
   .os-desktop-shell { @apply fixed inset-0 z-0 overflow-hidden; }
   .os-wallpaper { @apply fixed inset-0; background: url("/wallpapers/forest.jpg") center / cover no-repeat; transition: filter 250ms ease; }
@@ -123,12 +126,12 @@ body {
   #menubar .menubar-status li { @apply flex items-center; }
   #menubar .menubar-status time { @apply whitespace-nowrap; }
 
-  .menubar-power-menu { @apply absolute left-3 top-10 z-[80] flex w-52 flex-col rounded-xl border border-white/50 bg-white/80 p-2 text-sm text-gray-800 shadow-2xl backdrop-blur-2xl; }
+  .menubar-power-menu { @apply absolute left-3 top-10 z-[80] flex w-52 flex-col rounded-xl border border-white/50 bg-white/80 p-2 text-sm text-gray-800 shadow-2xl; backdrop-filter: blur(40px); }
   .menubar-power-menu strong { @apply border-b border-black/10 px-3 py-2 text-xs; }
   .menubar-power-menu button { @apply rounded-lg border-0 bg-transparent px-3 py-2 text-left hover:bg-blue-500 hover:text-white; }
 
   .os-desktop-widgets { @apply absolute left-6 top-16 z-10 flex flex-col gap-3 text-white drop-shadow-lg; }
-  .os-desktop-widgets > div { @apply flex w-28 flex-col rounded-2xl border border-white/20 bg-white/20 p-3 backdrop-blur-xl; }
+  .os-desktop-widgets > div { @apply flex w-28 flex-col rounded-2xl border border-white/20 bg-white/20 p-3; backdrop-filter: blur(24px); }
   .os-desktop-widgets > div span { @apply text-xs font-semibold uppercase; }
   .os-desktop-widgets > div strong { @apply text-4xl font-light leading-none; }
   .os-desktop-widgets > div small { @apply mt-1 text-xs; }
@@ -1302,7 +1305,11 @@ body {
   }
 
   .finder-view-btn {
-    @apply flex items-center justify-center w-7 h-7 rounded-md text-gray-600 hover:bg-white/50 hover:text-gray-900 transition-colors;
+    @apply flex items-center justify-center w-7 h-7 rounded-md text-gray-600 hover:text-gray-900 transition-colors;
+    background: transparent;
+  }
+  .finder-view-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 
   .finder-view-btn.active {
@@ -1318,7 +1325,8 @@ body {
   }
 
   .finder-sidebar {
-    @apply w-40 shrink-0 border-r border-black/10 bg-white/50 p-3 overflow-y-auto;
+    @apply w-40 shrink-0 border-r border-black/10 p-3 overflow-y-auto;
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px);
   }
 
@@ -1554,8 +1562,9 @@ body {
   }
 
   .notes-sidebar {
-    @apply w-56 shrink-0 border-r border-black/10 bg-white/50 p-3 overflow-y-auto flex-col;
+    @apply w-56 shrink-0 border-r border-black/10 p-3 overflow-y-auto flex-col;
     backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.5);
   }
 
   .notes-sidebar-section {

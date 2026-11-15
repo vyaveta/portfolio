@@ -19,6 +19,7 @@ function AppleLogo({ className, ...props }: React.SVGProps<SVGSVGElement>) {
 }
 import Dock from "@/components/dock";
 import NotesWindow from "@/components/apps/Notes";
+import CalculatorWindow from "@/components/apps/Calculator";
 import Finder from "@/components/apps/Finder";
 import SpotifyWindow from "@/components/apps/Spotify";
 import SafariWindow from "@/components/apps/Safari";
@@ -46,6 +47,7 @@ const apps: AppInfo[] = [
   { id: "terminal", name: "Skills", icon: "/img/icons/terminal.png" },
   { id: "spotify", name: "Spotify", icon: "/img/icons/spotify.png" },
   { id: "notes", name: "Notes", icon: "/img/icons/notes.png" },
+  { id: "calculator", name: "Calculator", icon: "/img/icons/calculator.png" },
   { id: "resume", name: "Resume", icon: "/img/icons/sf-icons/pdf.svg" },
   { id: "system-settings", name: "System Settings", icon: "/img/icons/settings.png" },
   { id: "app-store", name: "App Store", icon: "/img/icons/app-store.png" },
@@ -75,7 +77,8 @@ function BootScreen({
 }) {
   return (
     <button className="os-boot-screen" onClick={onStart} disabled={busy} aria-label={shutdown ? "Power on this Mac" : wakeOnly ? "Wake this Mac" : "Start this Mac"}>
-      <AppleLogo className="os-boot-apple" width={48} height={48} />
+      {/* <AppleLogo className="os-boot-apple" width={48} height={48} /> */}
+       <div className="icon-[fa6-brands--apple] text-white -mt-4 size-20 sm:size-24" />
       {busy ? (
         <div className="os-boot-progress" aria-label={`Starting up ${Math.round(progress)} percent`}>
           <span style={{ width: `${progress}%` }} />
@@ -85,7 +88,7 @@ function BootScreen({
       ) : (
         <span className="os-boot-prompt">Click to {wakeOnly ? "wake up" : "boot"}</span>
       )}
-    </button>
+    </button> 
   );
 }
 
@@ -340,6 +343,8 @@ export default function OsExperience() {
             <SafariWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ) : activeApp.id === "notes" ? (
             <NotesWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
+          ) : activeApp.id === "calculator" ? (
+            <CalculatorWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ) : activeApp.id === "terminal" ? (
             <TerminalWindow minimized={windowMinimized} maximized={windowMaximized} onClose={() => { setActiveApp(null); setWindowMinimized(false); setWindowMaximized(false); }} onMinimize={() => setWindowMinimized(true)} onToggleMaximize={() => setWindowMaximized((value) => !value)} />
           ) : (

@@ -20,6 +20,7 @@ const dockAssetPaths: Record<string, string> = {
   terminal: "/img/icons/terminal.png",
   notes: "/img/icons/notes.png",
   spotify: "/img/icons/spotify.png",
+  calculator: "/img/icons/calculator.png",
   trash: "/images/trash.png",
 };
 
@@ -116,7 +117,14 @@ export default function Dock({ onLaunch }: DockProps) {
                 data-app-id={app.id}
                 disabled={!app.canOpen}
                 aria-expanded={app.id === "notes" ? notesOpen : undefined}
-                onClick={app.id === "notes" ? () => setNotesOpen(true) : () => onLaunch?.(app.id)}
+                onClick={() => {
+                  if (!app.canOpen) return;
+                  if (app.id === "notes") {
+                    setNotesOpen(true);
+                  } else {
+                    onLaunch?.(app.id);
+                  }
+                }}
               >
                 <span className="dock-tooltip" aria-hidden="true">{app.name}</span>
                 <Image src={dockAssetPaths[app.id] ?? `/images/${app.icon}`} alt="" width={64} height={64} draggable={false} />
